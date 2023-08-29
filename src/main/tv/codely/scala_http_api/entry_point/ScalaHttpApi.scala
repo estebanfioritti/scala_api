@@ -2,7 +2,6 @@ package tv.codely.scala_http_api.entry_point
 
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
-import akka.stream.ActorMaterializer
 import com.typesafe.config.ConfigFactory
 import tv.codely.scala_http_api.module.shared.infrastructure.config.{DbConfig, MessageBrokerConfig}
 import tv.codely.scala_http_api.module.shared.infrastructure.dependency_injection.SharedModuleDependencyContainer
@@ -26,8 +25,8 @@ object ScalaHttpApi {
 
     val sharedDependencies = new SharedModuleDependencyContainer(actorSystemName, dbConfig, publisherConfig)
 
-    implicit val system: ActorSystem                = sharedDependencies.actorSystem
-    implicit val materializer: ActorMaterializer    = sharedDependencies.materializer
+    implicit val system: ActorSystem = sharedDependencies.actorSystem
+    //    implicit val materializer: ActorMaterializer = sharedDependencies.materializer
     implicit val executionContext: ExecutionContext = sharedDependencies.executionContext
 
     val container = new EntryPointDependencyContainer(
@@ -35,9 +34,10 @@ object ScalaHttpApi {
       new VideoModuleDependencyContainer(sharedDependencies.doobieDbConnection, sharedDependencies.messagePublisher)
     )
 
-    val routes = new Routes(container)
+    val routes: Routes = new Routes(container)
 
-    val bindingFuture = Http().bindAndHandle(routes.all, host, port)
+    //    val bindingFuture = Http().bindAndHandle(routes.all, host, port)
+    val bindingFuture = Http().newServerAt(host, port).bind(routes.all)
 
     bindingFuture.failed.foreach { t =>
       println(s"Failed to bind to http://$host:$port/:")
