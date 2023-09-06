@@ -3,6 +3,7 @@ package tv.codely.scala_http_api.entry_point
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
 import com.typesafe.config.ConfigFactory
+import tv.codely.scala_http_api.module.movcta.infrastructure.dependency_injection.MovCtaModuleDependencyContainer
 import tv.codely.scala_http_api.module.shared.infrastructure.config.{DbConfig, MessageBrokerConfig}
 import tv.codely.scala_http_api.module.shared.infrastructure.dependency_injection.SharedModuleDependencyContainer
 import tv.codely.scala_http_api.module.user.infrastructure.dependency_injection.UserModuleDependencyContainer
@@ -25,13 +26,13 @@ object ScalaHttpApi {
 
     val sharedDependencies = new SharedModuleDependencyContainer(actorSystemName, dbConfig, publisherConfig)
 
-    implicit val system: ActorSystem = sharedDependencies.actorSystem
-    //    implicit val materializer: ActorMaterializer = sharedDependencies.materializer
+    implicit val system: ActorSystem                = sharedDependencies.actorSystem
     implicit val executionContext: ExecutionContext = sharedDependencies.executionContext
 
     val container = new EntryPointDependencyContainer(
       new UserModuleDependencyContainer(sharedDependencies.doobieDbConnection, sharedDependencies.messagePublisher),
-      new VideoModuleDependencyContainer(sharedDependencies.doobieDbConnection, sharedDependencies.messagePublisher)
+      new VideoModuleDependencyContainer(sharedDependencies.doobieDbConnection, sharedDependencies.messagePublisher),
+      new MovCtaModuleDependencyContainer(sharedDependencies.doobieDbConnection)
     )
 
     val routes: Routes = new Routes(container)
