@@ -12,6 +12,13 @@ final class Routes(container: EntryPointDependencyContainer) {
   private val status = get {
     path("status")(container.statusGetController.get())
   }
+  private val movcta = get {
+    path("movcta") {
+      parameter("banca", "agencia", "corredor", "desde", "hasta") { (banca, agencia, corredor, desde, hasta) =>
+        container.movCtaController.get(banca, agencia, corredor, desde, hasta)
+      }
+    }
+  }
 
   private val user = get {
     path("users")(container.userGetController.get())
@@ -43,7 +50,7 @@ final class Routes(container: EntryPointDependencyContainer) {
       }
     }
 
-  val all: Route = status ~ user ~ video
+  val all: Route = status ~ user ~ video ~ movcta
 
   private def jsonBody(handler: Map[String, JsValue] => Route): Route =
     entity(as[JsValue])(json => handler(json.asJsObject.fields))

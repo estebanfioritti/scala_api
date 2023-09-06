@@ -19,7 +19,16 @@ object Dependencies {
     "com.newmotion"              %% "akka-rabbitmq"           % "5.0.0",
     "ch.qos.logback"             % "logback-classic"          % "1.2.3", // Logging backend implementation
     "com.typesafe.scala-logging" %% "scala-logging"           % "3.7.2", // SLF4J Scala wrapper
-    "net.logstash.logback"       % "logstash-logback-encoder" % "4.11" // Log JSON encoder
+    "net.logstash.logback"       % "logstash-logback-encoder" % "4.11", // Log JSON encoder
+//    Agregados de prueba
+    "com.typesafe.slick"         %% "slick"                   % "3.3.3",
+    "com.typesafe.slick"         %% "slick-hikaricp"          % "3.3.3",
+    "com.typesafe"               % "config"                   % "1.4.1",
+//    "io.circe" %% "circe-core" % "3.2.1",
+//    "io.circe" %% "circe-generic" % "3.2.1",
+//    "io.circe" %% "circe-parser" % "3.2.1",
+//    "de.heikoseeberger" %% "akka-http-circe" % "1.37.0",
+    "com.typesafe.play"          %% "play-json"               % "2.9.4"
   )
 
   val test: Seq[ModuleID] = Seq(
